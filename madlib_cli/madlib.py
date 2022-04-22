@@ -17,14 +17,35 @@ def read_template(file):
 
 
 def parse_template(my_str):
-    inner_regex = r'{\w*}'
-    outer_regex = r'\w{2,}'
-    parts = str(re.findall(inner_regex, my_str))
-    return_parts = tuple(re.findall(outer_regex, parts))
-    stripped = re.sub(inner_regex, '{}', my_str)
-    print(return_parts)
-    print(stripped)
-    return stripped, return_parts
+    stripped = ''
+    parts = []
+    capture = False
+    current = ''
+
+    for char in my_str:
+        if char == '{':
+            stripped += char
+            capture = True
+            current = ''
+        elif char == '}':
+            stripped += char
+            capture = False
+            parts.append(current)
+        elif capture:
+            current += char
+        else:
+            stripped += char
+
+    return stripped, tuple(parts)
+
+    # inner_regex = r'{\w*}'
+    # outer_regex = r'\w{2,}'
+    # parts = str(re.findall(inner_regex, my_str))
+    # return_parts = tuple(re.findall(outer_regex, parts))
+    # stripped = re.sub(inner_regex, '{}', my_str)
+    # print(return_parts)
+    # print(stripped)
+    # return stripped, return_parts
 
 
 def merge(string, user_input):
